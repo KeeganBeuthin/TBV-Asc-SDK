@@ -19,13 +19,14 @@
  (type $17 (func (param i32 i64 i32 i64 i32 i64 i32) (result i32)))
  (type $18 (func (param i32 f64) (result i32)))
  (type $19 (func (param f64 i32) (result i32)))
- (import "env" "abort" (func $src/ffi/abort (param i32 i32 i32 i32)))
+ (import "env" "memory" (memory $0 1))
+ (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (import "env" "logMessage" (func $src/ffi/logMessage (param i32 i32)))
+ (import "env" "abort" (func $src/ffi/abort (param i32 i32 i32 i32)))
  (import "env" "query_rdf_tbv_cli" (func $src/ffi/query_rdf_tbv_cli (param i32 i32) (result i32)))
  (import "env" "get_result_row" (func $src/ffi/get_result_row (param i32) (result i32)))
  (import "env" "free_result" (func $src/ffi/free_result (param i32)))
  (import "env" "set_query_result" (func $src/ffi/set_query_result (param i32)))
- (import "env" "abort" (func $~lib/builtins/abort (param i32 i32 i32 i32)))
  (global $src/transactions/globalAmount (mut f64) (f64.const 0))
  (global $~lib/rt/itcms/total (mut i32) (i32.const 0))
  (global $~lib/rt/itcms/threshold (mut i32) (i32.const 0))
@@ -51,11 +52,10 @@
  (global $~lib/util/number/_K (mut i32) (i32.const 0))
  (global $~lib/util/number/_frc_pow (mut i64) (i64.const 0))
  (global $~lib/util/number/_exp_pow (mut i32) (i32.const 0))
- (global $~lib/rt/__rtti_base i32 (i32.const 5920))
- (global $~lib/memory/__data_end i32 (i32.const 5948))
- (global $~lib/memory/__stack_pointer (mut i32) (i32.const 38716))
- (global $~lib/memory/__heap_base i32 (i32.const 38716))
- (memory $0 1)
+ (global $~lib/rt/__rtti_base i32 (i32.const 6048))
+ (global $~lib/memory/__data_end i32 (i32.const 6076))
+ (global $~lib/memory/__stack_pointer (mut i32) (i32.const 38844))
+ (global $~lib/memory/__heap_base i32 (i32.const 38844))
  (data $0 (i32.const 12) "|\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00d\00\00\00t\00o\00S\00t\00r\00i\00n\00g\00(\00)\00 \00r\00a\00d\00i\00x\00 \00a\00r\00g\00u\00m\00e\00n\00t\00 \00m\00u\00s\00t\00 \00b\00e\00 \00b\00e\00t\00w\00e\00e\00n\00 \002\00 \00a\00n\00d\00 \003\006\00\00\00\00\00\00\00\00\00")
  (data $1 (i32.const 140) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00&\00\00\00~\00l\00i\00b\00/\00u\00t\00i\00l\00/\00n\00u\00m\00b\00e\00r\00.\00t\00s\00\00\00\00\00\00\00")
  (data $2 (i32.const 204) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\02\00\00\000\00\00\00\00\00\00\00\00\00\00\00")
@@ -116,27 +116,34 @@
  (data $57 (i32.const 5740) "\1c\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00\02\00\00\00\"\00\00\00\00\00\00\00\00\00\00\00")
  (data $58 (i32.const 5772) "\1c\00\00\00\03\00\00\00\00\00\00\00\04\00\00\00\0c\00\00\00@\16\00\00\00\00\00\00\80\16\00\00")
  (data $59 (i32.const 5804) "l\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00T\00\00\00E\00r\00r\00o\00r\00 \00p\00a\00r\00s\00i\00n\00g\00 \00b\00a\00l\00a\00n\00c\00e\00:\00 \00i\00n\00v\00a\00l\00i\00d\00 \00J\00S\00O\00N\00 \00f\00o\00r\00m\00a\00t\00\00\00\00\00\00\00\00\00")
- (data $60 (i32.const 5920) "\06\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\04A\00\00A\00\00\00")
+ (data $60 (i32.const 5916) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00*\00\00\00O\00b\00j\00e\00c\00t\00 \00a\00l\00r\00e\00a\00d\00y\00 \00p\00i\00n\00n\00e\00d\00\00\00")
+ (data $61 (i32.const 5980) "<\00\00\00\00\00\00\00\00\00\00\00\02\00\00\00(\00\00\00O\00b\00j\00e\00c\00t\00 \00i\00s\00 \00n\00o\00t\00 \00p\00i\00n\00n\00e\00d\00\00\00\00\00")
+ (data $62 (i32.const 6048) "\06\00\00\00 \00\00\00 \00\00\00 \00\00\00\00\00\00\00\04A\00\00A\00\00\00")
  (table $0 1 1 funcref)
  (elem $0 (i32.const 1))
+ (export "execute_credit_leg" (func $src/transactions/execute_credit_leg))
+ (export "process_credit_result" (func $src/transactions/process_credit_result))
+ (export "execute_debit_leg" (func $src/transactions/execute_debit_leg))
+ (export "allocateString" (func $src/memory/allocateString))
+ (export "getStringLen" (func $src/memory/getStringLen))
+ (export "readString" (func $src/memory/readString))
+ (export "isNaN" (func $src/utils/isNaN))
  (export "logMessage" (func $src/ffi/logMessage))
  (export "query_rdf_tbv_cli" (func $src/ffi/query_rdf_tbv_cli))
  (export "get_result_row" (func $src/ffi/get_result_row))
  (export "free_result" (func $src/ffi/free_result))
  (export "set_query_result" (func $src/ffi/set_query_result))
- (export "execute_credit_leg" (func $src/transactions/execute_credit_leg))
- (export "process_credit_result" (func $src/transactions/process_credit_result))
- (export "execute_debit_leg" (func $src/transactions/execute_debit_leg))
- (export "isNaN" (func $src/utils/isNaN))
- (export "allocateString" (func $src/memory/allocateString))
- (export "getStringLen" (func $src/memory/getStringLen))
- (export "readString" (func $src/memory/readString))
+ (export "__new" (func $~lib/rt/itcms/__new))
+ (export "__pin" (func $~lib/rt/itcms/__pin))
+ (export "__unpin" (func $~lib/rt/itcms/__unpin))
+ (export "__collect" (func $~lib/rt/itcms/__collect))
+ (export "__rtti_base" (global $~lib/rt/__rtti_base))
  (export "memory" (memory $0))
- (export "abort" (func $export:src/ffi/abort))
+ (export "writeString" (func $export:src/memory/writeString))
  (export "parseFloat" (func $export:src/utils/parseFloat))
  (export "consoleLog" (func $export:src/utils/consoleLog))
  (export "parseBalance" (func $export:src/utils/parseBalance))
- (export "writeString" (func $export:src/memory/writeString))
+ (export "abort" (func $export:src/ffi/abort))
  (start $~start)
  (func $~lib/util/number/decimalCount32 (param $value i32) (result i32)
   local.get $value
@@ -5142,6 +5149,120 @@
   call $~lib/util/number/dtoa
   return
  )
+ (func $~lib/rt/itcms/__pin (param $ptr i32) (result i32)
+  (local $obj i32)
+  local.get $ptr
+  if
+   local.get $ptr
+   i32.const 20
+   i32.sub
+   local.set $obj
+   local.get $obj
+   call $~lib/rt/itcms/Object#get:color
+   i32.const 3
+   i32.eq
+   if
+    i32.const 5936
+    i32.const 320
+    i32.const 338
+    i32.const 7
+    call $~lib/builtins/abort
+    unreachable
+   end
+   local.get $obj
+   call $~lib/rt/itcms/Object#unlink
+   local.get $obj
+   global.get $~lib/rt/itcms/pinSpace
+   i32.const 3
+   call $~lib/rt/itcms/Object#linkTo
+  end
+  local.get $ptr
+  return
+ )
+ (func $~lib/rt/itcms/__unpin (param $ptr i32)
+  (local $obj i32)
+  local.get $ptr
+  i32.eqz
+  if
+   return
+  end
+  local.get $ptr
+  i32.const 20
+  i32.sub
+  local.set $obj
+  local.get $obj
+  call $~lib/rt/itcms/Object#get:color
+  i32.const 3
+  i32.ne
+  if
+   i32.const 6000
+   i32.const 320
+   i32.const 352
+   i32.const 5
+   call $~lib/builtins/abort
+   unreachable
+  end
+  global.get $~lib/rt/itcms/state
+  i32.const 1
+  i32.eq
+  if
+   local.get $obj
+   call $~lib/rt/itcms/Object#makeGray
+  else
+   local.get $obj
+   call $~lib/rt/itcms/Object#unlink
+   local.get $obj
+   global.get $~lib/rt/itcms/fromSpace
+   global.get $~lib/rt/itcms/white
+   call $~lib/rt/itcms/Object#linkTo
+  end
+ )
+ (func $~lib/rt/itcms/__collect
+  i32.const 0
+  drop
+  global.get $~lib/rt/itcms/state
+  i32.const 0
+  i32.gt_s
+  if
+   loop $while-continue|0
+    global.get $~lib/rt/itcms/state
+    i32.const 0
+    i32.ne
+    if
+     call $~lib/rt/itcms/step
+     drop
+     br $while-continue|0
+    end
+   end
+  end
+  call $~lib/rt/itcms/step
+  drop
+  loop $while-continue|1
+   global.get $~lib/rt/itcms/state
+   i32.const 0
+   i32.ne
+   if
+    call $~lib/rt/itcms/step
+    drop
+    br $while-continue|1
+   end
+  end
+  global.get $~lib/rt/itcms/total
+  i64.extend_i32_u
+  i32.const 200
+  i64.extend_i32_u
+  i64.mul
+  i64.const 100
+  i64.div_u
+  i32.wrap_i64
+  i32.const 1024
+  i32.add
+  global.set $~lib/rt/itcms/threshold
+  i32.const 0
+  drop
+  i32.const 0
+  drop
+ )
  (func $~lib/rt/__visit_globals (param $0 i32)
   (local $1 i32)
   i32.const 448
@@ -5151,6 +5272,12 @@
   local.get $0
   call $~lib/rt/itcms/__visit
   i32.const 256
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 5936
+  local.get $0
+  call $~lib/rt/itcms/__visit
+  i32.const 6000
   local.get $0
   call $~lib/rt/itcms/__visit
   i32.const 2336
@@ -5290,8 +5417,8 @@
   global.get $~lib/memory/__data_end
   i32.lt_s
   if
-   i32.const 38736
-   i32.const 38784
+   i32.const 38864
+   i32.const 38912
    i32.const 1
    i32.const 1
    call $~lib/builtins/abort
@@ -9075,25 +9202,20 @@
   local.get $3
   return
  )
- (func $export:src/ffi/abort (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
+ (func $export:src/memory/writeString (param $0 i32) (param $1 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  local.get $0
+  local.get $1
   i32.store
-  global.get $~lib/memory/__stack_pointer
-  local.get $1
-  i32.store offset=4
   local.get $0
   local.get $1
-  local.get $2
-  local.get $3
-  call $src/ffi/abort
+  call $src/memory/writeString
   global.get $~lib/memory/__stack_pointer
-  i32.const 8
+  i32.const 4
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
@@ -9151,20 +9273,25 @@
   global.set $~lib/memory/__stack_pointer
   local.get $1
  )
- (func $export:src/memory/writeString (param $0 i32) (param $1 i32)
+ (func $export:src/ffi/abort (param $0 i32) (param $1 i32) (param $2 i32) (param $3 i32)
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.sub
   global.set $~lib/memory/__stack_pointer
   call $~stack_check
   global.get $~lib/memory/__stack_pointer
-  local.get $1
+  local.get $0
   i32.store
+  global.get $~lib/memory/__stack_pointer
+  local.get $1
+  i32.store offset=4
   local.get $0
   local.get $1
-  call $src/memory/writeString
+  local.get $2
+  local.get $3
+  call $src/ffi/abort
   global.get $~lib/memory/__stack_pointer
-  i32.const 4
+  i32.const 8
   i32.add
   global.set $~lib/memory/__stack_pointer
  )
