@@ -1,9 +1,14 @@
 {
   "name": "tbv-asc-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "build/release.js",
   "types": "build/release.d.ts",
+  "ascMain": "src/index.ts",
+  "files": [
+    "build",
+    "src"
+  ],
   "scripts": {
     "asbuild:debug": "asc src/index.ts --target debug",
     "asbuild:release": "asc src/index.ts --target release",
