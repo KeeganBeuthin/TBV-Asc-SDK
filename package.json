@@ -1,14 +1,16 @@
 {
   "name": "tbv-asc-sdk",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
-  "main": "index.ts",
+  "main": "build/release.js",
+  "types": "build/release.d.ts",
   "scripts": {
     "asbuild:debug": "asc src/index.ts --target debug",
     "asbuild:release": "asc src/index.ts --target release",
     "asbuild": "npm run asbuild:debug && npm run asbuild:release",
     "test": "node tests",
-    "start": "npx serve ."
+    "start": "npx serve .",
+    "build": "asc src/index.ts --target release --bindings esm --outFile build/release.js"
   },
   "keywords": ["assemblyscript", "sdk", "TBV","tbv"],
   "author": "Keegan Beuthin",
