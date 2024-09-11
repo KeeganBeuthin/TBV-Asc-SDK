@@ -1,32 +1,25 @@
 {
   "name": "tbv-asc-sdk",
-  "version": "1.0.5",
-  "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "exports": {
-    "require": "./dist/index.js",
-    "import": "./dist/index.mjs"
+  "version": "1.0.25",
+  "description": "AssemblyScript SDK for TBV",
+  "main": "assembly/index.ts",
+  "types": "assembly/index.ts",
+  "scripts": {
+    "asbuild:untouched": "asc assembly/index.ts -b build/untouched.wasm -t build/untouched.wat --sourceMap --validate --importMemory",
+    "asbuild:optimized": "asc assembly/index.ts -b build/optimized.wasm -t build/optimized.wat --sourceMap --validate --optimize --noDebug --importMemory",
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized",
+    "prepublishOnly": "npm run asbuild"
   },
   "files": [
-    "dist"
-],
-  "scripts": {
-    "asbuild:debug": "asc src/index.ts --target debug",
-    "asbuild:release": "asc src/index.ts --target release",
-    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
-    "test": "node tests",
-    "start": "npx serve .",
-    "prebuild": "mkdir -p dist && ls -la dist",
-    "build": "asc src/index.ts -b dist/index.wasm -t dist/index.wat --importMemory --sourceMap --optimize --verbose",
-    "postbuild": "node scripts/generate-js-bindings.js"
-  },
-  "keywords": ["assemblyscript", "sdk", "TBV","tbv"],
-  "author": "Keegan Beuthin",
-  "license": "ISC",
+    "assembly",
+    "build"
+  ],
   "devDependencies": {
-    "@assemblyscript/loader": "^0.27.29",
-    "assemblyscript": "^0.27.29"
-  }
+    "assemblyscript": "^0.19.23"
+  },
+  "dependencies": {
+    "@assemblyscript/loader": "^0.19.23",
+    "assemblyscript-json": "^1.1.0"
+  },
+  "type": "module"
 }

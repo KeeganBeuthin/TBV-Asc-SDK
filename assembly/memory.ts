@@ -7,10 +7,18 @@ export function allocateString(len: i32): usize {
   return ptr;
 }
 
+
 export function writeString(ptr: usize, str: string): void {
   const buffer = String.UTF8.encode(str);
   memory.copy(ptr, changetype<usize>(buffer), buffer.byteLength);
 }
+
+
+
+export function __allocate(size: i32): usize {
+  return heap.alloc(size) as usize;
+}
+
 
 export function getStringLen(ptr: usize): i32 {
   consoleLog(`Getting string length at address ${ptr}`);
@@ -22,6 +30,8 @@ export function getStringLen(ptr: usize): i32 {
   return len;
 }
 
+
+
 export function readString(ptr: usize): string {
   const len = getStringLen(ptr);
   const buffer = new Uint8Array(len);
@@ -30,3 +40,4 @@ export function readString(ptr: usize): string {
   }
   return String.UTF8.decode(buffer.buffer);
 }
+
