@@ -1,6 +1,6 @@
 {
   "name": "tbv-asc-sdk",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "AssemblyScript SDK for TBV",
   "main": "assembly/index.ts",
   "types": "assembly/index.ts",

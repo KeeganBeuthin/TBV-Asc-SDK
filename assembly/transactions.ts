@@ -1,8 +1,9 @@
-// main.ts
 
 import { readString, allocateString, writeString, consoleLog, parseFloat, isNaN } from './utils';
+import { JSON } from "assemblyscript-json";
 
 let globalAmount: f64 = 0;
+let globalQuery: string = "";
 
 export function execute_credit_leg(amountPtr: usize, accountPtr: usize): usize {
   const amount = readString(amountPtr);
@@ -10,10 +11,10 @@ export function execute_credit_leg(amountPtr: usize, accountPtr: usize): usize {
   
   consoleLog(`Executing credit leg for amount: ${amount}, account: ${account}`);
 
-  globalAmount = parseFloat(amount)
+  globalAmount = parseFloat(amount);
   
   // Construct RDF query
-  const query = `
+  globalQuery = `
     PREFIX ex: <http://example.org/>
     SELECT ?balance
     WHERE {
@@ -22,47 +23,59 @@ export function execute_credit_leg(amountPtr: usize, accountPtr: usize): usize {
   `;
 
   // Allocate memory for the query string and write it
-  const queryPtr = allocateString(query.length);
-  writeString(queryPtr, query);
+  const queryPtr = allocateString(globalQuery.length);
+  writeString(queryPtr, globalQuery);
 
   // Return the pointer to the query string
   return queryPtr;
 }
 
+function createErrorResult(message: string): usize {
+  const errorResult = {
+    creditQuery: globalQuery,
+    creditResult: `Error: ${message}`
+  };
+  const errorResultString = JSON.stringify(errorResult);
+  const errorPtr = allocateString(errorResultString.length);
+  writeString(errorPtr, errorResultString);
+  return errorPtr;
+}
+
+
+
 export function process_credit_result(resultPtr: usize): usize {
   const result = readString(resultPtr);
   consoleLog(`Processing credit result: ${result}`);
 
-  // Find the balance value in the JSON string
-  const balanceStart = result.indexOf('"balance":"') + 11;
-  const balanceEnd = result.indexOf('"', balanceStart);
+  const jsonResult = JSON.parse(result);
+  const balanceValue = jsonResult.getObj("results")!.getArr("bindings")!.at(0).getObj("balance")!.getString("value");
 
-  if (balanceStart > 10 && balanceEnd > balanceStart) {
-    const balanceStr = result.substring(balanceStart, balanceEnd);
-    const balance = parseFloat(balanceStr);
+  if (balanceValue) {
+    const balance = parseFloat(balanceValue.toString());
 
     if (!isNaN(balance)) {
       const newBalance = balance + globalAmount;
-      const responseMessage = `Current balance: ${balance.toString()}. After credit of ${globalAmount.toString()}, new balance: ${newBalance.toString()}`;
-      consoleLog(responseMessage);
-      const responsePtr = allocateString(responseMessage.length);
-      writeString(responsePtr, responseMessage);
+      
+      const finalResult = {
+        creditQuery: globalQuery,
+        creditResult: `Current balance: ${balance.toFixed(2)}. After credit of ${globalAmount.toFixed(2)}, new balance: ${newBalance.toFixed(2)}`
+      };
+
+      const finalResultString = JSON.stringify(finalResult);
+      consoleLog(`Final result: ${finalResultString}`);
+      
+      const responsePtr = allocateString(finalResultString.length);
+      writeString(responsePtr, finalResultString);
       return responsePtr;
     } else {
-      const errorMessage = `Invalid balance value: ${balanceStr}`;
-      consoleLog(errorMessage);
-      const errorPtr = allocateString(errorMessage.length);
-      writeString(errorPtr, errorMessage);
-      return errorPtr;
+      return createErrorResult(`Invalid balance value: ${balanceValue}`);
     }
   } else {
-    const errorMessage = "No balance found in result";
-    consoleLog(errorMessage);
-    const errorPtr = allocateString(errorMessage.length);
-    writeString(errorPtr, errorMessage);
-    return errorPtr;
+    return createErrorResult("No balance found in result");
   }
 }
+
+
 
 export function execute_debit_leg(amountPtr: usize, accountPtr: usize): usize {
   const amount = readString(amountPtr);
