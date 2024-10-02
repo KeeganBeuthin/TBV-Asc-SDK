@@ -1,5 +1,6 @@
 // utils.ts
 
+import { JSON } from "assemblyscript-json";
 import { logMessage } from './ffi';
 
 export function parseFloat(str: string): f64 {
@@ -57,6 +58,20 @@ export function createSuccessResult(message: string): usize {
   const ptr = allocateString(message.length);
   writeString(ptr, message);
   return ptr;
+}
+
+// Add this new function
+export function allocateJson(jsonObj: JSON.Obj): usize {
+  const jsonString = jsonObj.toString();
+  const ptr = allocateString(jsonString.length);
+  writeString(ptr, jsonString);
+  return ptr;
+}
+
+// Also, let's add a function to read JSON from memory
+export function readJson(ptr: usize): JSON.Obj {
+  const jsonString = readString(ptr);
+  return <JSON.Obj>JSON.parse(jsonString);
 }
 
 export function parseBalance(jsonStr: string): f64 {

@@ -1,4 +1,4 @@
-import { readString, allocateString, writeString, consoleLog, parseFloat, isNaN } from './utils';
+import { readString, allocateString, writeString, consoleLog, parseFloat, isNaN, allocateJson, readJson } from './utils';
 import { JSON } from "assemblyscript-json";
 
 let globalAmount: f64 = 0;
@@ -34,10 +34,7 @@ function createErrorResult(message: string): usize {
   errorResult.set("creditQuery", globalQuery);
   errorResult.set("creditResult", `Error: ${message}`);
   
-  const errorResultString = errorResult.toString();
-  const errorPtr = allocateString(errorResultString.length);
-  writeString(errorPtr, errorResultString);
-  return errorPtr;
+  return allocateJson(errorResult);
 }
 
 export function process_credit_result(resultPtr: usize): usize {
@@ -61,12 +58,7 @@ export function process_credit_result(resultPtr: usize): usize {
           finalResult.set("creditQuery", globalQuery);
           finalResult.set("creditResult", `Current balance: ${balance.toString()}. After credit of ${globalAmount.toString()}, new balance: ${newBalance.toString()}`);
 
-          const finalResultString = finalResult.toString();
-          consoleLog(`Final result: ${finalResultString}`);
-          
-          const responsePtr = allocateString(finalResultString.length);
-          writeString(responsePtr, finalResultString);
-          return responsePtr;
+          return allocateJson(finalResult);
         } else {
           return createErrorResult(`Invalid balance value: ${(<JSON.Str>balanceValue).valueOf()}`);
         }

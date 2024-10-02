@@ -1,5 +1,5 @@
-import { consoleLog, allocateString, writeString, readString } from './utils';
-import { JSON } from "assemblyscript-json";
+import { consoleLog, allocateString, writeString, readString, allocateJson } from './utils';
+import { JSON } from 'assemblyscript-json';
 
 class Request {
   method: string;
