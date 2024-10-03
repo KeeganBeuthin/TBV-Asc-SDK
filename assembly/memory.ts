@@ -24,7 +24,12 @@ export function getStringLen(ptr: usize): i32 {
   consoleLog(`Getting string length at address ${ptr}`);
   let len = 0;
   while (load<u8>(ptr + len) !== 0) {
+    consoleLog(`Byte at ${ptr + len}: ${load<u8>(ptr + len)}`);
     len++;
+    if (len > 1000) {  // Safety check to prevent infinite loop
+      consoleLog("Warning: Reached maximum length check");
+      break;
+    }
   }
   consoleLog(`String at ${ptr} has length ${len}`);
   return len;
@@ -34,10 +39,14 @@ export function getStringLen(ptr: usize): i32 {
 
 export function readString(ptr: usize): string {
   const len = getStringLen(ptr);
+  consoleLog(`Reading string of length ${len} from address ${ptr}`);
   const buffer = new Uint8Array(len);
   for (let i = 0; i < len; i++) {
     buffer[i] = load<u8>(ptr + i);
+    consoleLog(`Read byte: ${buffer[i]}`);
   }
-  return String.UTF8.decode(buffer.buffer);
+  const result = String.UTF8.decode(buffer.buffer);
+  consoleLog(`Decoded string: "${result}"`);
+  return result;
 }
 
